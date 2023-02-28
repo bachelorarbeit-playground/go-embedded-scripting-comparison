@@ -3,7 +3,6 @@ package lua
 import (
 	"fmt"
 
-	luatime "github.com/vadv/gopher-lua-libs/time"
 	lua "github.com/yuin/gopher-lua"
 	luar "layeh.com/gopher-luar"
 )
@@ -11,9 +10,6 @@ import (
 func RunScript(script []byte, functionName string, input any) (*lua.LTable, error) {
 	L := lua.NewState()
 	defer L.Close()
-
-	// use => local time = require("time")
-	luatime.Preload(L)
 
 	if err := L.DoString(string(script)); err != nil {
 		return nil, fmt.Errorf("loading Lua script failed: %s", err.Error())

@@ -30,20 +30,6 @@ func MakeTransformer() *Transformer {
 	t := Transformer{}
 
 	t.vm = jsonnet.MakeVM()
-	// funcMap := make(map[string]jsonnet.Contents)
-	// t.vm.NativeFunction(&jsonnet.NativeFunction{
-	// 	Name:   "parseJson",
-	// 	Params: []ast.Identifier{"json"},
-	// 	Func: func(args []interface{}) (res interface{}, err error) {
-	// 		data := []byte(args[0].(string))
-	// 		err = json.Unmarshal(data, &res)
-	// 		return
-	// 	},
-	// })
-	// funcMap["ext"] = jsonnet.MakeContents("{parseJson:: std.native(\"parseJson\"),}")
-
-	// importer := FileMemImporter{Data: funcMap}
-	// t.vm.Importer(&importer)
 
 	return &t
 }

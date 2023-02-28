@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/adimunteanu/gluamapper"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/yuin/gluamapper"
 )
 
 func main() {
@@ -36,8 +36,8 @@ func main() {
 	}
 	start := time.Now()
 	input := model.RawWindDataPayload{
-		ParkId:       "1",
-		TurbineId:    "2",
+		ParkId:       "b86163c9-346e-45c9-93bb-dc77a22a5813",
+		TurbineId:    "4deca05f-ceb7-474d-9c28-1e00b0c7521c",
 		Region:       "Berlin",
 		Date:         "2022-11-19",
 		Interval:     19,
@@ -56,19 +56,21 @@ func main() {
 			}
 
 			var processedEvent model.AnomalyDetectionPayload
-			err = gluamapper.Map(output, &processedEvent)
+			opt := gluamapper.Option{ErrorUnused: true, ErrorUnset: true, WeaklyTypedInput: false}
+			mapper := gluamapper.NewMapper(opt)
+			err = mapper.Map(output, &processedEvent)
 
 			if err != nil {
 				log.Error().Err(err).Msg("failed to cast a lua table")
 				return
 			}
 
-			// _, err := json.Marshal(processedEvent)
+			_, err = json.Marshal(processedEvent)
 
-			// if err != nil {
-			// 	log.Error().Err(err).Msg("could not marshall output of script")
-			// 	return
-			// }
+			if err != nil {
+				log.Error().Err(err).Msg("could not marshall output of script")
+				return
+			}
 
 			// log.Info().Msgf("Output: %s", string(msgData))
 		}
@@ -82,15 +84,15 @@ func main() {
 				return
 			}
 
-			output, err := jsonnet.WithJsonnet(script, inputJson)
+			_, err := jsonnet.WithJsonnet(script, inputJson)
 			if err != nil {
 				log.Error().Err(err).Msg("could not marshall output of script")
 				return
 			}
-			output += "'"
 			// log.Info().Msgf("Output: %s", string(output))
 		}
 	}
+
 	elapsed := time.Since(start)
 	log.Info().Msgf("Output: %s", elapsed)
 }
