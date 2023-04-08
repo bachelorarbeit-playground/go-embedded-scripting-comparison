@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/rs/zerolog v1.28.0
-	github.com/vadv/gopher-lua-libs v0.4.1
 	github.com/yuin/gopher-lua v1.0.0
 	layeh.com/gopher-luar v1.0.10
 )

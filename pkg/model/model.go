@@ -18,3 +18,7 @@ type AnomalyDetectionPayload struct {
 	Availability float32 `json:"availability"`
 	Region       string  `json:"region"`
 }
+
+type Fibonacci struct {
+	N int `json:"n"`
+}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"go-embedded-scripting-comparison/pkg/fibonacci"
 	"go-embedded-scripting-comparison/pkg/file"
 	"go-embedded-scripting-comparison/pkg/jsonnet"
 	"go-embedded-scripting-comparison/pkg/lua"
@@ -44,6 +45,38 @@ func main() {
 		Timezone:     "GMT+2",
 		Value:        0.03,
 		Availability: 95,
+	}
+
+	if strings.HasSuffix(scriptPath, "fib.lua") {
+		log.Info().Msgf("Output %d", fibonacci.RunFibonacciLua(script, 30))
+
+		elapsed := time.Since(start)
+		log.Info().Msgf("Time taken: %s", elapsed)
+		return
+	}
+
+	if strings.HasSuffix(scriptPath, "fib.jsonnet") {
+		jsonnetInput := model.Fibonacci{
+			N: 30,
+		}
+		var inputJson, err = json.Marshal(jsonnetInput)
+
+		if err != nil {
+			log.Error().Err(err).Msg("could not marshall input of script")
+			return
+		}
+
+		output, err := jsonnet.WithJsonnet(script, inputJson)
+
+		if err != nil {
+			log.Error().Err(err).Msg("could not marshall output of script")
+			return
+		}
+		log.Info().Msgf("Output: %s", output)
+
+		elapsed := time.Since(start)
+		log.Info().Msgf("Time taken: %s", elapsed)
+		return
 	}
 
 	if strings.HasSuffix(scriptPath, ".lua") {
